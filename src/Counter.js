@@ -28,6 +28,28 @@ export default class Counter extends Component {
     requestAnimationFrame(this.animate.bind(this));
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.end != this.props.end) {
+      this.setState({ value: 0 })
+      this.stop = undefined;
+      this.startTime = Date.now();
+      requestAnimationFrame(this.animate.bind(this));
+    }
+  }
+
+  // shouldComponentUpdate(nextProps) {
+  //   if (nextProps.end != this.props.end) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
+  // componentDidUpdate() {
+  //   this.startTime = Date.now();
+  //   requestAnimationFrame(this.animate.bind(this));
+  // }
+
   animate() {
     const { onComplete } = this.props;
 
