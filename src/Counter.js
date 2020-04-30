@@ -7,6 +7,7 @@ export default class Counter extends Component {
   static propTypes = {
     start: PropTypes.number,
     end: PropTypes.number.isRequired,
+    kFormat: PropTypes.bool,
     digits: PropTypes.number,
     time: PropTypes.number,
     easing: PropTypes.string,
@@ -19,6 +20,7 @@ export default class Counter extends Component {
     digits: 0,
     time: 1000,
     easing: 'linear',
+    kFormat: false
   };
 
   state = { value: this.props.start };
@@ -63,7 +65,7 @@ export default class Counter extends Component {
   }
 
   draw() {
-    const { time, start, end, easing } = this.props;
+    const { time, start, end, easing, kFormat } = this.props;
 
     const now = Date.now();
     if (now - this.startTime >= time) this.stop = true;
@@ -74,12 +76,21 @@ export default class Counter extends Component {
     this.setState({ value });
   }
 
+  kFormatter = (num) => {
+    const { kFormat } = this.props;
+    if (kFormat) {
+      return Math.abs(num) > 999 ? Math.sign(num) * ((Math.abs(num) / 1000).toFixed(1)) + 'k' : Math.sign(num) * Math.abs(num)
+    } else {
+      return num;
+    }
+  }
+
   render() {
     const { digits, style } = this.props;
     const { value } = this.state;
 
     return (
-      <Text style={style}>{value.toFixed(digits)}</Text>
+      <Text style={style}>{this.kFormatter(value.toFixed(digits))}</Text>
     );
   }
 }
